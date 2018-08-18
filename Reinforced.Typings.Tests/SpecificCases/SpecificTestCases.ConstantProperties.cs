@@ -51,14 +51,14 @@ module Test {
 	}
 	export class ConstantTestA
 	{
+		public static ConstantString: string = 'a';
 		public static StaticString: string = 'b';
 		public static StaticNumber: number = 42;
-		public static StaticExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
-		public static StaticNotExEnum: number = 2;
-		public static ConstantString: string = 'a';
 		public static ConstantNumber: number = 42;
 		public static ConstExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
+		public static StaticExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
 		public static ConstNotExEnum: number = 2;
+		public static StaticNotExEnum: number = 2;
 	}
 	export class ConstantTestB
 	{
@@ -67,8 +67,8 @@ module Test {
 	}
 	export class ConstantTestC
 	{
-		public static WillNotBeInitialized: string;
 		public static WillBeInitialized: string = 'a';
+		public static WillNotBeInitialized: string;
 	}
 }
 ";

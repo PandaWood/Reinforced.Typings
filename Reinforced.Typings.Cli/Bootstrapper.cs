@@ -240,7 +240,7 @@ namespace Reinforced.Typings.Cli
             {
                 if (storeIfFullName)
                 {
-                    var lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + "\\";
+                    var lastAssemblyLocalDir = Path.GetDirectoryName(assemblyNameOrFullPath) + Path.DirectorySeparatorChar;
                     if (!_allAssembliesDirs.Contains(lastAssemblyLocalDir)) _allAssembliesDirs.Add(lastAssemblyLocalDir);
                 }
 #if DEBUG
