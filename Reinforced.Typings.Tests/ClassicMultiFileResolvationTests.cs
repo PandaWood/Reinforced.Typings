@@ -44,7 +44,7 @@ namespace Reinforced.Typings.Tests
         {
             var file = Setup2Files("File1.ts", "File2.ts", x => x.Global(a => a.UseModules()));
 
-            //todo this fails in mono, the Prefix property of this below is "" - but Prefix if one below is null
+            //todo this fails in mono, the Prefix property of this below is "" - but Prefix of one below is null
             var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
             Assert.Equal(new RtSimpleTypeName("IInterface2"), typeName, _comparer);
@@ -89,7 +89,7 @@ namespace Reinforced.Typings.Tests
         {
             var file = Setup2Files("File1.ts", "Another/File2.ts", x => x.Global(a => a.UseModules()));
 
-            //todo this fails in mono, the Prefix property of this below is "" - but Prefix if one below is null
+            //todo this fails in mono, the Prefix property of this below is "" - but Prefix of one below is null
             var typeName = file.TypeResolver.ResolveTypeName(typeof(TestFluentAssembly.TwoInterfaces.IInterface2));
 
             Assert.Equal(new RtSimpleTypeName("IInterface2"), typeName, _comparer);
