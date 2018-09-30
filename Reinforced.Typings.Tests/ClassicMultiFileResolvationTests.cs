@@ -83,6 +83,7 @@ namespace Reinforced.Typings.Tests
             Assert.Equal("Another/File2.ts", rf.Path);
         }
 
+        
         [Fact]
         public void SimpleModuleResolvationTestDifferentDirs()
         {

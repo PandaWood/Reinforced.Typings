@@ -44,6 +44,9 @@ namespace Reinforced.Typings.Tests.SpecificCases
         [Fact]
         public void ConstantProperties()
         {
+	        // NB this test fails on Mono because the Members property of RtClass does not 
+	        // order the tokens in the same order as the CLR on Windows (ie it's CLR-specific, relying on a certain order)
+	        // (Similar to the way that the order of attributes in C# code is CLR-dependent and shouldn't be relied on)
             const string result = @"
 module Test {
 	export enum ExportedEnum { 
@@ -51,14 +54,14 @@ module Test {
 	}
 	export class ConstantTestA
 	{
-		public static ConstantString: string = 'a';
 		public static StaticString: string = 'b';
 		public static StaticNumber: number = 42;
+		public static StaticExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
+		public static StaticNotExEnum: number = 2;
+		public static ConstantString: string = 'a';
 		public static ConstantNumber: number = 42;
 		public static ConstExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
-		public static StaticExEnum: Test.ExportedEnum = Test.ExportedEnum.One;
 		public static ConstNotExEnum: number = 2;
-		public static StaticNotExEnum: number = 2;
 	}
 	export class ConstantTestB
 	{
@@ -67,8 +70,8 @@ module Test {
 	}
 	export class ConstantTestC
 	{
-		public static WillBeInitialized: string = 'a';
 		public static WillNotBeInitialized: string;
+		public static WillBeInitialized: string = 'a';
 	}
 }
 ";
