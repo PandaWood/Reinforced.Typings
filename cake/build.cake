@@ -5,21 +5,32 @@ Task("Clean")
 {
   CleanDirectories("../Reinforced.Typings*/**/bin");
   CleanDirectories("../Reinforced.Typings*/**/obj");
+
+  Information("Clean completed");
 });
 Task("PackageClean")
   .Does(() =>
 {
   CleanDirectories("../package"); 
+
   Information("PackageClean completed");
 });
+
+var buildSettings = new DotNetCoreBuildSettings
+{
+    // Framework = "netcoreapp2.0",
+    Verbosity = DotNetCoreVerbosity.Minimal,
+    Configuration = "Release"
+};
 
 Task("Build")
   .IsDependentOn("Clean")
   .IsDependentOn("PackageClean")
   .Does(() =>
 {
-  
-  // cd package
+  NuGetRestore("../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj");
+  DotNetCoreBuild("../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj", buildSettings);
+
   Information("Build completed");
 });
 
