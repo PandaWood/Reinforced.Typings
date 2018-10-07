@@ -63,7 +63,7 @@ Task("Build")
     OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NET45)
   });
 
-  // need to test/check these cake commands create the destination if it doesn't exist
+  // need to test/check that these cake commands create the destination if it doesn't exist
   CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", "package/content");
   CopyFileToDirectory("../xmls/Reinforced.Typings.targets", "package/build");
   CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", "package/buildMultiTargeting");
