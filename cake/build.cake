@@ -31,11 +31,11 @@ Task("Build")
   .Does(() =>
 {
   // Mono gives me error for this -> MSB3644: The reference assemblies for framework ".NETFramework,Version=v4.5" were not found
-  // DotNetCoreBuild("../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj", new DotNetCoreBuildSettings
-  // {
-  //   Verbosity = DotNetCoreVerbosity.Minimal,
-  //   Configuration = "Release",
-  // });
+  DotNetCoreBuild("../Reinforced.Typings.Integrate/Reinforced.Typings.Integrate.NETCore.csproj", new DotNetCoreBuildSettings
+  {
+    Verbosity = DotNetCoreVerbosity.Minimal,
+    Configuration = "Release",
+  });
   
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
@@ -63,25 +63,29 @@ Task("Build")
     OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NET45)
   });
 
-  // need to test/check this creates the destination if it doesn't exist
-  CopyFileToDirectory("xmls/Reinforced.Typings.settings.xml", "package/content");
-  CopyFileToDirectory("xmls/Reinforced.Typings.targets", "package/build");
-  CopyFileToDirectory("xmls/Reinforced.Typings.Multi.targets", "package/buildMultiTargeting");
-  CopyFileToDirectory("xmls/Reinforced.Typings.props", "package/build");
-  CopyFileToDirectory("xmls/Reinforced.Typings.props", "package/buildMultiTargeting");
+  // need to test/check this cake commands create the destination if it doesn't exist
+  CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", "package/content");
+  CopyFileToDirectory("../xmls/Reinforced.Typings.targets", "package/build");
+  CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", "package/buildMultiTargeting");
+  CopyFileToDirectory("../xmls/Reinforced.Typings.props", "package/build");
+  CopyFileToDirectory("../xmls/Reinforced.Typings.props", "package/buildMultiTargeting");
+  CopyFiles("../Reinforced.Typings/bin/Release/*.*", "package/lib");
+  CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", "package/build/net45");
+  CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", "package/build/netstandard1.6");
 
+  Pack("../package/Reinforced.Typings.nuspec", new NuGetPackSettings {
+    BasePath = "../package"
+  })
+
+  // original file copy operations for reference (since we need to emulate the xcopy options)
   // xcopy xmls\Reinforced.Typings.settings.xml package\content\ /I /Y
   // xcopy xmls\Reinforced.Typings.targets package\build\ /I /Y
   // xcopy xmls\Reinforced.Typings.Multi.targets package\buildMultiTargeting\ /I /Y
   // xcopy xmls\Reinforced.Typings.props package\build\ /I /Y
   // xcopy xmls\Reinforced.Typings.props package\buildMultiTargeting\ /I /Y
-
-  // rem lib
   // xcopy Reinforced.Typings\bin\Release\*.* package\lib\ /E /I /Y
-  // rem build
   // xcopy Reinforced.Typings.Integrate\bin\Release\net45\Reinforced.Typings.Integrate.dll package\build\net45\ /I /Y
   // xcopy Reinforced.Typings.Integrate\bin\Release\netstandard1.6\*.* package\build\netstandard1.6\ /I /Y
-  // rem package
   // nuget pack package\Reinforced.Typings.nuspec -BasePath package
 
   Information("Build completed");
