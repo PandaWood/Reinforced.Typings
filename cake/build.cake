@@ -15,7 +15,6 @@ Task("PackageClean")
   Information("PackageClean completed");
 });
 
-const string BUILD_OUTPUT_DIR = "../package/tools";
 const string RELEASE = "Release";
 const string NETCORE21 = "netcoreapp2.1";
 const string NETCORE20 = "netcoreapp2.0";
@@ -24,6 +23,14 @@ const string NET461 = "net461";
 const string NET45 = "net45";
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
+
+const string toolsPath = "../package/tools";
+const string contentPath = "../package/content";
+const string buildPath = "../package/build";
+const string multiTargetPath = "../package/buildMultiTargeting";
+const string libPath = "../package/lib";
+const string buildNet45 = "../package/build/net45";
+const string buildNet16 = "../package/build/netstandard1.6";
 
 Task("Build")
   .IsDependentOn("Clean")
@@ -40,53 +47,48 @@ Task("Build")
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NETCORE21,
-    OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NETCORE21)
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE21)
   });
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NETCORE20,
-    OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NETCORE20)
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE20)
   });
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NETCORE1,
-    OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NETCORE1)
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE1)
   });
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NET461,
-    OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NET461)
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NET461)
   });
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NET45,
-    OutputDirectory = System.IO.Path.Combine(BUILD_OUTPUT_DIR, NET45)
+    OutputDirectory = System.IO.Path.Combine(toolsPath, NET45)
   });
 
-  // need to test/check that these cake commands create the destination if it doesn't exist
-  CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", "package/content");
-  CopyFileToDirectory("../xmls/Reinforced.Typings.targets", "package/build");
-  CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", "package/buildMultiTargeting");
-  CopyFileToDirectory("../xmls/Reinforced.Typings.props", "package/build");
-  CopyFileToDirectory("../xmls/Reinforced.Typings.props", "package/buildMultiTargeting");
-  CopyFiles("../Reinforced.Typings/bin/Release/*.*", "package/lib");
-  CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", "package/build/net45");
-  CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", "package/build/netstandard1.6");
+  EnsureDirectoryExists(contentPath);
+  EnsureDirectoryExists(buildPath);
+  EnsureDirectoryExists(multiTargetPath);
+  EnsureDirectoryExists(libPath);
+  EnsureDirectoryExists(buildNet45);
+  EnsureDirectoryExists(buildNet16);
 
-  Pack("../package/Reinforced.Typings.nuspec", new NuGetPackSettings {
+  CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", contentPath);
+  CopyFileToDirectory("../xmls/Reinforced.Typings.targets", buildPath);
+  CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", multiTargetPath);
+  CopyFileToDirectory("../xmls/Reinforced.Typings.props", buildPath);
+  CopyFileToDirectory("../xmls/Reinforced.Typings.props", multiTargetPath);
+  CopyFiles("../Reinforced.Typings/bin/Release/*.*", libPath);
+  CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", buildNet45);
+  CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", buildNet16);
+
+  NuGetPack("../package/Reinforced.Typings.nuspec", new NuGetPackSettings {
     BasePath = "../package"
-  })
-
-  // original file copy operations for reference (since we need to emulate the xcopy options)
-  // xcopy xmls\Reinforced.Typings.settings.xml package\content\ /I /Y
-  // xcopy xmls\Reinforced.Typings.targets package\build\ /I /Y
-  // xcopy xmls\Reinforced.Typings.Multi.targets package\buildMultiTargeting\ /I /Y
-  // xcopy xmls\Reinforced.Typings.props package\build\ /I /Y
-  // xcopy xmls\Reinforced.Typings.props package\buildMultiTargeting\ /I /Y
-  // xcopy Reinforced.Typings\bin\Release\*.* package\lib\ /E /I /Y
-  // xcopy Reinforced.Typings.Integrate\bin\Release\net45\Reinforced.Typings.Integrate.dll package\build\net45\ /I /Y
-  // xcopy Reinforced.Typings.Integrate\bin\Release\netstandard1.6\*.* package\build\netstandard1.6\ /I /Y
-  // nuget pack package\Reinforced.Typings.nuspec -BasePath package
+  });
 
   Information("Build completed");
 });

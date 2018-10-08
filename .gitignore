@@ -201,14 +201,15 @@ FakesAssemblies/
 *.plg
 
 # Visual Studio 6 workspace options file
+.vscode
 *.opt
 Playground/
-/Reinforced.Typings.Private.sln
-/Reinforced.Typings/Reinforced.Typings.pfx
+
+# Reinforced Typings specific
+Reinforced.Typings.Private.sln
+Reinforced.Typings.pfx
 docplan.txt
-/package/build
-/package/buildMultiTargeting
-/package/lib
-/Reinforced.Typings/Reinforced.snk
-/Reinforced.Typings.Cli/Reinforced.snk
-/Reinforced.Typings.Integrate/Reinforced.snk
+package/build
+package/buildMultiTargeting
+package/lib
+Reinforced.snk
