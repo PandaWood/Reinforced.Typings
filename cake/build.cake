@@ -19,13 +19,13 @@ const string buildNet16 = "../package/build/netstandard1.6";
 Task("PackageClean")
   .Does(() =>
 {
-  CleanDirectories(toolsPath); 
-  CleanDirectories(contentPath); 
-  CleanDirectories(buildPath); 
-  CleanDirectories(multiTargetPath); 
-  CleanDirectories(libPath); 
-  CleanDirectories(buildNet45); 
-  CleanDirectories(buildNet16); 
+  CleanDirectory(toolsPath); EnsureDirectoryExists(toolsPath);
+  CleanDirectory(contentPath); EnsureDirectoryExists(contentPath);
+  CleanDirectory(buildPath); EnsureDirectoryExists(buildPath);
+  CleanDirectory(multiTargetPath); EnsureDirectoryExists(multiTargetPath);
+  CleanDirectory(libPath); EnsureDirectoryExists(libPath);
+  CleanDirectory(buildNet45); EnsureDirectoryExists(buildNet45);
+  CleanDirectory(buildNet16); EnsureDirectoryExists(buildNet16);
 
   Information("PackageClean completed");
 });
@@ -39,7 +39,6 @@ const string NET45 = "net45";
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 
-
 Task("Build")
   .IsDependentOn("Clean")
   .IsDependentOn("PackageClean")
@@ -50,9 +49,7 @@ Task("Build")
   {
     Verbosity = DotNetCoreVerbosity.Minimal,
     Configuration = "Release",
-  });
-  
-  EnsureDirectoryExists(toolsPath);
+  });  
 
   // dotnet versions do not compile at the moment due to error 
   // Generators\ParameterCodeGenerator.cs(59,43): error CS1061: 'Type' does not contain a definition for 'IsEnum' and no 
@@ -84,18 +81,14 @@ Task("Build")
     OutputDirectory = System.IO.Path.Combine(toolsPath, NET45)
   });
 
-  EnsureDirectoryExists(contentPath);
-  EnsureDirectoryExists(buildPath);
-  EnsureDirectoryExists(multiTargetPath);
-  EnsureDirectoryExists(libPath);
-  EnsureDirectoryExists(buildNet45);
-  EnsureDirectoryExists(buildNet16);
-
   CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", contentPath);
   CopyFileToDirectory("../xmls/Reinforced.Typings.targets", buildPath);
   CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", multiTargetPath);
+
+  // this must be a relic/mistake, the files don't exist and were never copied in the original build.cmd anyway
   // CopyFileToDirectory("../xmls/Reinforced.Typings.props", buildPath);
   // CopyFileToDirectory("../xmls/Reinforced.Typings.props", multiTargetPath);
+  
   CopyFiles("../Reinforced.Typings/bin/Release/*.*", libPath);
   CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", buildNet45);
   CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", buildNet16);
