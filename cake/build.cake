@@ -7,10 +7,25 @@ Task("Clean")
 
   Information("Clean completed");
 });
+
+const string toolsPath = "../package/tools";
+const string contentPath = "../package/content";
+const string buildPath = "../package/build";
+const string multiTargetPath = "../package/buildMultiTargeting";
+const string libPath = "../package/lib";
+const string buildNet45 = "../package/build/net45";
+const string buildNet16 = "../package/build/netstandard1.6";
+
 Task("PackageClean")
   .Does(() =>
 {
-  CleanDirectories("../package"); 
+  CleanDirectories(toolsPath); 
+  CleanDirectories(contentPath); 
+  CleanDirectories(buildPath); 
+  CleanDirectories(multiTargetPath); 
+  CleanDirectories(libPath); 
+  CleanDirectories(buildNet45); 
+  CleanDirectories(buildNet16); 
 
   Information("PackageClean completed");
 });
@@ -24,13 +39,6 @@ const string NET45 = "net45";
 
 const string CliNetCoreProject = "../Reinforced.Typings.Cli/Reinforced.Typings.Cli.NETCore.csproj";
 
-const string toolsPath = "../package/tools";
-const string contentPath = "../package/content";
-const string buildPath = "../package/build";
-const string multiTargetPath = "../package/buildMultiTargeting";
-const string libPath = "../package/lib";
-const string buildNet45 = "../package/build/net45";
-const string buildNet16 = "../package/build/netstandard1.6";
 
 Task("Build")
   .IsDependentOn("Clean")
@@ -44,21 +52,27 @@ Task("Build")
     Configuration = "Release",
   });
   
-  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-    Configuration = RELEASE, 
-    Framework = NETCORE21,
-    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE21)
-  });
-  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-    Configuration = RELEASE, 
-    Framework = NETCORE20,
-    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE20)
-  });
-  DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
-    Configuration = RELEASE, 
-    Framework = NETCORE1,
-    OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE1)
-  });
+  EnsureDirectoryExists(toolsPath);
+
+  // dotnet versions do not compile at the moment due to error 
+  // Generators\ParameterCodeGenerator.cs(59,43): error CS1061: 'Type' does not contain a definition for 'IsEnum' and no 
+  // accessible extension method 'IsEnum' accepting a first argument of type 'Type' could be found
+  
+  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+  //   Configuration = RELEASE, 
+  //   Framework = NETCORE21,
+  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE21)
+  // });
+  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+  //   Configuration = RELEASE, 
+  //   Framework = NETCORE20,
+  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE20)
+  // });
+  // DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
+  //   Configuration = RELEASE, 
+  //   Framework = NETCORE1,
+  //   OutputDirectory = System.IO.Path.Combine(toolsPath, NETCORE1)
+  // });
   DotNetCorePublish(CliNetCoreProject, new DotNetCorePublishSettings {  
     Configuration = RELEASE, 
     Framework = NET461,
@@ -80,8 +94,8 @@ Task("Build")
   CopyFileToDirectory("../xmls/Reinforced.Typings.settings.xml", contentPath);
   CopyFileToDirectory("../xmls/Reinforced.Typings.targets", buildPath);
   CopyFileToDirectory("../xmls/Reinforced.Typings.Multi.targets", multiTargetPath);
-  CopyFileToDirectory("../xmls/Reinforced.Typings.props", buildPath);
-  CopyFileToDirectory("../xmls/Reinforced.Typings.props", multiTargetPath);
+  // CopyFileToDirectory("../xmls/Reinforced.Typings.props", buildPath);
+  // CopyFileToDirectory("../xmls/Reinforced.Typings.props", multiTargetPath);
   CopyFiles("../Reinforced.Typings/bin/Release/*.*", libPath);
   CopyFileToDirectory("../Reinforced.Typings.Integrate/bin/Release/net45/Reinforced.Typings.Integrate.dll", buildNet45);
   CopyFiles("../Reinforced.Typings.Integrate/bin/Release/netstandard1.6/*.*", buildNet16);

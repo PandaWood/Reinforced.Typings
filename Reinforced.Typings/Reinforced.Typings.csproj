@@ -40,11 +40,10 @@
     </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Reinforced_pub.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -218,6 +217,9 @@
     <Compile Include="TsExporter.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeResolver.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Reinforced_pub.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
